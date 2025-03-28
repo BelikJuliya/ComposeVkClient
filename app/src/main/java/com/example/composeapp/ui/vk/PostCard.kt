@@ -3,6 +3,7 @@ package com.example.composeapp.ui.vk
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,52 +35,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeapp.R
+import com.example.composeapp.domain.FeedPost
+import com.example.composeapp.domain.StatisticItem
+import com.example.composeapp.domain.StatisticType
 import com.example.composeapp.ui.theme.ComposeAppTheme
 
 @Composable
-fun VkPost(
-    userName: String,
-    time: String,
-    userImageRes: Int,
-    content: String,
-    contentImageRes: Int
+fun PostCard(
+    modifier: Modifier = Modifier,
+    feedPost: FeedPost,
+    onStatisticsItemClickListener: (StatisticItem) -> Unit
 ) {
-    Card(
-        modifier = Modifier
-            .padding(16.dp),
-        shape = RoundedCornerShape(
-            corner = CornerSize(size = 4.dp)
-        ),
-        border = BorderStroke(width = 1.dp, color = Color.Gray),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+    with(feedPost) {
+        Card(
+            shape = RoundedCornerShape(
+                corner = CornerSize(size = 4.dp)
+            ),
+            border = BorderStroke(width = 1.dp, color = Color.Gray),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
-            TitleRow(
-                time = time,
-                userName = userName,
-                userImageRes =
-                    userImageRes
-            )
-            Text(
-                modifier = Modifier
-                    .padding(all = 8.dp)
-                    .fillMaxWidth(),
-                text = content,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = 4.dp),
-                painter = painterResource(contentImageRes),
-                contentDescription = "Fish",
-                contentScale = ContentScale.FillWidth
-            )
-            BottomRow()
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                PostHeader(
+                    feedPost = feedPost
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(all = 8.dp)
+                        .fillMaxWidth(),
+                    text = contentText,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .width(200.dp)
+                        .padding(all = 4.dp),
+                    painter = painterResource(contentImageResId),
+                    contentDescription = "Fish",
+                    contentScale = ContentScale.FillWidth
+                )
+                UserStatistics(
+                    statistics = statistics,
+                    onItemClickListener = {
+                        onStatisticsItemClickListener(it)
+                    }
+                )
+            }
         }
     }
 }
@@ -88,12 +93,8 @@ fun VkPost(
 @Composable
 private fun VkPostPreviewLight() {
     ComposeAppTheme(darkTheme = false) {
-        VkPost(
-            userName = "Уволено",
-            time = "14:00",
-            userImageRes = R.drawable.me,
-            content = "Кабаныч, когда узнал, что если сотрудникам не платить, то они умирают от голода",
-            contentImageRes = R.drawable.homeless
+        PostCard(
+            feedPost = FeedPost(), onStatisticsItemClickListener = {}
         )
     }
 }
@@ -102,21 +103,15 @@ private fun VkPostPreviewLight() {
 @Composable
 private fun VkPostPreviewDark() {
     ComposeAppTheme(darkTheme = true) {
-        VkPost(
-            userName = "Уволено",
-            time = "14:00",
-            userImageRes = R.drawable.me,
-            content = "Кабаныч, когда узнал, что если сотрудникам не платить, то они умирают от голода",
-            contentImageRes = R.drawable.homeless
+        PostCard(
+            feedPost = FeedPost(), onStatisticsItemClickListener = {}
         )
     }
 }
 
 @Composable
-fun TitleRow(
-    time: String,
-    userName: String,
-    userImageRes: Int
+fun PostHeader(
+    feedPost: FeedPost
 ) {
     Row(
         modifier = Modifier
@@ -129,7 +124,7 @@ fun TitleRow(
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape),
-            painter = painterResource(userImageRes),
+            painter = painterResource(feedPost.avatarResId),
             contentDescription = "Avatar",
             contentScale = ContentScale.Fit
         )
@@ -139,14 +134,14 @@ fun TitleRow(
                 .weight(weight = 1f),
         ) {
             Text(
-                text = userName,
+                text = feedPost.communityName,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Medium,
                 fontSize = 20.sp
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = time,
+                text = feedPost.publicationDate,
                 color = Color.Gray
             )
         }
@@ -166,10 +161,8 @@ fun TitleRow(
 @Composable
 fun PreviewTitleRowLight() {
     ComposeAppTheme(darkTheme = false) {
-        TitleRow(
-            userName = "Уволено",
-            time = "14:00",
-            userImageRes = R.drawable.me,
+        PostHeader(
+            FeedPost()
         )
     }
 }
@@ -178,16 +171,16 @@ fun PreviewTitleRowLight() {
 @Composable
 fun PreviewTitleRoDark() {
     ComposeAppTheme(darkTheme = true) {
-        TitleRow(
-            userName = "Уволено",
-            time = "14:00",
-            userImageRes = R.drawable.me,
+        PostHeader(
+            FeedPost()
         )
     }
 }
 
 @Composable
-fun BottomRow(
+fun UserStatistics(
+    statistics: List<StatisticItem>,
+    onItemClickListener: (StatisticItem) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -195,28 +188,68 @@ fun BottomRow(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        val viewItem = statistics.getItemByType(StatisticType.VIEWS)
         Row(
             modifier = Modifier
                 .weight(weight = 1f)
         ) {
-            IconText(text = "916", imageRes = R.drawable.ic_eye)
+            IconText(
+                text = viewItem.count.toString(),
+                imageRes = R.drawable.ic_eye,
+                onItemClickListener = {
+                    onItemClickListener(viewItem)
+                }
+            )
         }
         Row(
             modifier = Modifier
                 .weight(weight = 1f)
         ) {
-            IconText(text = "7", imageRes = R.drawable.ic_repost)
+            val sharesItem = statistics.getItemByType(StatisticType.SHARES)
+            IconText(
+                text = sharesItem.count.toString(),
+                imageRes = R.drawable.ic_repost,
+                onItemClickListener = {
+                    onItemClickListener(sharesItem)
+                }
+            )
             Spacer(modifier = Modifier.size(16.dp))
-            IconText(text = "8", imageRes = R.drawable.ic_comments)
+
+            val commentItem = statistics.getItemByType(StatisticType.COMMENTS)
+            IconText(text = commentItem.count.toString(),
+                imageRes = R.drawable.ic_comments,
+                onItemClickListener = {
+                    onItemClickListener(commentItem)
+                }
+            )
             Spacer(modifier = Modifier.size(16.dp))
-            IconText(text = "23", imageRes = R.drawable.ic_like)
+
+            val likesItem = statistics.getItemByType(StatisticType.COMMENTS)
+            IconText(
+                text = likesItem.count.toString(),
+                imageRes = R.drawable.ic_like,
+                onItemClickListener = {
+                    onItemClickListener(likesItem)
+                }
+            )
         }
     }
 }
 
+private fun List<StatisticItem>.getItemByType(type: StatisticType): StatisticItem {
+    return this.find { it.type == type } ?: throw IllegalStateException()
+}
+
 @Composable
-fun IconText(imageRes: Int, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun IconText(
+    imageRes: Int,
+    text: String,
+    onItemClickListener: () -> Unit
+) {
+    Row(
+        Modifier.clickable { onItemClickListener() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Icon(
             modifier = Modifier.size(size = 24.dp),
             contentDescription = null,
@@ -235,7 +268,7 @@ fun IconText(imageRes: Int, text: String) {
 @Composable
 fun IconTextPreviewLight() {
     ComposeAppTheme(darkTheme = false) {
-        IconText(text = "916", imageRes = R.drawable.ic_eye)
+        IconText(text = "916", imageRes = R.drawable.ic_eye, onItemClickListener = {})
     }
 }
 
@@ -243,7 +276,7 @@ fun IconTextPreviewLight() {
 @Composable
 fun IconTextPreviewDark() {
     ComposeAppTheme(darkTheme = true) {
-        IconText(text = "916", imageRes = R.drawable.ic_eye)
+        IconText(text = "916", imageRes = R.drawable.ic_eye, onItemClickListener = {})
     }
 }
 
@@ -251,7 +284,7 @@ fun IconTextPreviewDark() {
 @Composable
 fun PreviewBottomRowLight() {
     ComposeAppTheme(darkTheme = false) {
-        BottomRow()
+        UserStatistics(FeedPost().statistics, onItemClickListener = {})
     }
 }
 
@@ -259,6 +292,6 @@ fun PreviewBottomRowLight() {
 @Composable
 fun PreviewBottomRowDark() {
     ComposeAppTheme(darkTheme = true) {
-        BottomRow()
+        UserStatistics(FeedPost().statistics, onItemClickListener = {})
     }
 }

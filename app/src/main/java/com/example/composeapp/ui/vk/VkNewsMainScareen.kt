@@ -1,38 +1,31 @@
 package com.example.composeapp.ui.vk
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.launch
+import com.example.composeapp.domain.FeedPost
+import java.util.Collections.replaceAll
 
 val TAG = "MainScreen"
 
 @Composable
 @Preview
 fun MainScreen() {
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val fabIsVisible = remember {
-        mutableStateOf(true)
+    val feedPost = remember {
+        mutableStateOf(FeedPost())
     }
 
     // Состояние выбранного элемента навигации
@@ -44,9 +37,6 @@ fun MainScreen() {
     )
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
         bottomBar = {
             NavigationBar(
                 contentColor = MaterialTheme.colorScheme.primary,
@@ -69,7 +59,22 @@ fun MainScreen() {
             }
         },
         content = { padding ->
-            Text(modifier = Modifier.padding(padding), text = "Test Screen")
+            PostCard(
+                modifier = Modifier.padding(padding),
+                feedPost = feedPost.value,
+                onStatisticsItemClickListener = { newItem ->
+                    val oldStatistics = feedPost.value.statistics
+                    val newStatistics = oldStatistics.map { oldItem ->
+                        if (oldItem.type == newItem.type) {
+                            oldItem.copy(count = oldItem.count + 1)
+                        } else {
+                            oldItem
+                        }
+                    }
+
+                    feedPost.value = feedPost.value.copy(statistics = newStatistics.toList())
+                }
+            )
         }
     )
 }

@@ -162,18 +162,18 @@ private fun UserStatistics(title: String, value: String) {
     }
 }
 
-@Preview
-@Composable
-fun previewCardLight() {
-    ComposeAppTheme(darkTheme = false) {
-        InstagramCard()
-    }
-}
-
-@Preview
-@Composable
-fun previewCardDark() {
-    ComposeAppTheme(darkTheme = true) {
-        InstagramCard()
-    }
-}
+//@Preview
+//@Composable
+//fun previewCardLight() {
+//    ComposeAppTheme(darkTheme = false) {
+//        InstagramCard()
+//    }
+//}
+//
+//@Preview
+//@Composable
+//fun previewCardDark() {
+//    ComposeAppTheme(darkTheme = true) {
+//        InstagramCard()
+//    }
+//}

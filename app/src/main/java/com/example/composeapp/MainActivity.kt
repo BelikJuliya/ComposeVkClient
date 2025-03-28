@@ -19,7 +19,7 @@ import com.example.composeapp.ui.theme.ComposeAppTheme
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel = ViewModelProvider(this)[InstagramViewModel::class.java]
+//    val viewModel = ViewModelProvider(this)[InstagramViewModel::class.java]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
