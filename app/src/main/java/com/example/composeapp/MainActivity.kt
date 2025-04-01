@@ -12,9 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import com.example.composeapp.ui.instagram.InstagramCard
-import com.example.composeapp.ui.instagram.InstagramViewModel
 import com.example.composeapp.ui.vk.MainScreen
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.vk.MainViewModel
@@ -34,7 +31,6 @@ class MainActivity : ComponentActivity() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(8.dp)
                 ) {
-//                    InstagramCard()
                     MainScreen(viewModel)
                 }
             }

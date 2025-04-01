@@ -5,22 +5,47 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.domain.StatisticItem
+import java.util.Date
 
 class MainViewModel : ViewModel() {
 
-    private val _feedPost = MutableLiveData(FeedPost())
-    val feedPost: LiveData<FeedPost> = _feedPost
+    private val initialList = mutableListOf<FeedPost>().apply {
+        repeat(50) {
+            add(
+                FeedPost(
+                    postId = it,
+                    communityName = "/dev/null № $it",
+                    publicationDate = String.format("dd:MMM:yyyy", Date())
+                )
+            )
+        }
+    }
 
-    fun updateCount(newItem: StatisticItem) {
-        val oldStatistics = feedPost.value?.statistics ?: throw IllegalStateException()
+    private val _feedPosts = MutableLiveData<List<FeedPost>>(initialList)
+    val feedPost: LiveData<List<FeedPost>> = _feedPosts
+
+    fun updateCount(statistic: StatisticItem, model: FeedPost) {
+        val oldPosts = feedPost.value?.toMutableList() ?: mutableListOf()
+        val oldStatistics = model.statistics
         val newStatistics = oldStatistics.map { oldItem ->
-            if (oldItem.type == newItem.type) {
+            if (oldItem.type == statistic.type) {
                 oldItem.copy(count = oldItem.count + 1)
             } else {
                 oldItem
             }
         }
+        val newFeedPost = model.copy(statistics = newStatistics)
 
-        _feedPost.value = feedPost.value?.copy(statistics = newStatistics)
+        _feedPosts.value = oldPosts.map {
+            if (it.postId == model.postId) {
+                newFeedPost
+            } else it
+        }
+    }
+
+    fun deleteItem(model: FeedPost) {
+        val newItems = feedPost.value?.toMutableList() ?: mutableListOf()
+        newItems.remove(model)
+        _feedPosts.value = newItems
     }
 }
