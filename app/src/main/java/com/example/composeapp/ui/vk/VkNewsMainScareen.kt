@@ -10,6 +10,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,11 +23,8 @@ import java.util.Collections.replaceAll
 val TAG = "MainScreen"
 
 @Composable
-@Preview
-fun MainScreen() {
-    val feedPost = remember {
-        mutableStateOf(FeedPost())
-    }
+fun MainScreen(viewModel: MainViewModel) {
+    val feedPost = viewModel.feedPost.observeAsState(FeedPost())
 
     // Состояние выбранного элемента навигации
     val selectedItemPosition = remember { mutableIntStateOf(0) }
@@ -62,18 +60,10 @@ fun MainScreen() {
             PostCard(
                 modifier = Modifier.padding(padding),
                 feedPost = feedPost.value,
-                onStatisticsItemClickListener = { newItem ->
-                    val oldStatistics = feedPost.value.statistics
-                    val newStatistics = oldStatistics.map { oldItem ->
-                        if (oldItem.type == newItem.type) {
-                            oldItem.copy(count = oldItem.count + 1)
-                        } else {
-                            oldItem
-                        }
-                    }
-
-                    feedPost.value = feedPost.value.copy(statistics = newStatistics.toList())
-                }
+                onLikeClickListener = viewModel::updateCount,
+                onShareClickListener = viewModel::updateCount,
+                onCommentClickListener = viewModel::updateCount,
+                onViewClickListener = viewModel::updateCount
             )
         }
     )

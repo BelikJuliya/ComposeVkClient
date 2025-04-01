@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,10 +17,11 @@ import com.example.composeapp.ui.instagram.InstagramCard
 import com.example.composeapp.ui.instagram.InstagramViewModel
 import com.example.composeapp.ui.vk.MainScreen
 import com.example.composeapp.ui.theme.ComposeAppTheme
+import com.example.composeapp.ui.vk.MainViewModel
 
 class MainActivity : ComponentActivity() {
 
-//    val viewModel = ViewModelProvider(this)[InstagramViewModel::class.java]
+    val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         .padding(8.dp)
                 ) {
 //                    InstagramCard()
-                    MainScreen()
+                    MainScreen(viewModel)
                 }
             }
         }

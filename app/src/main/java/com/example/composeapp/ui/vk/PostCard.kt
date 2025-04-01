@@ -44,7 +44,10 @@ import com.example.composeapp.ui.theme.ComposeAppTheme
 fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
-    onStatisticsItemClickListener: (StatisticItem) -> Unit
+    onViewClickListener: (StatisticItem) -> Unit,
+    onLikeClickListener: (StatisticItem) -> Unit,
+    onShareClickListener: (StatisticItem) -> Unit,
+    onCommentClickListener: (StatisticItem) -> Unit
 ) {
     with(feedPost) {
         Card(
@@ -80,9 +83,10 @@ fun PostCard(
                 )
                 UserStatistics(
                     statistics = statistics,
-                    onItemClickListener = {
-                        onStatisticsItemClickListener(it)
-                    }
+                    onCommentClickListener = { onCommentClickListener(it) },
+                    onLikeClickListener = { onLikeClickListener(it) },
+                    onViewClickListener = { onViewClickListener(it) },
+                    onShareClickListener = { onShareClickListener(it) }
                 )
             }
         }
@@ -94,7 +98,11 @@ fun PostCard(
 private fun VkPostPreviewLight() {
     ComposeAppTheme(darkTheme = false) {
         PostCard(
-            feedPost = FeedPost(), onStatisticsItemClickListener = {}
+            feedPost = FeedPost(),
+            onCommentClickListener = {},
+            onLikeClickListener = {},
+            onViewClickListener = {},
+            onShareClickListener = {}
         )
     }
 }
@@ -104,7 +112,10 @@ private fun VkPostPreviewLight() {
 private fun VkPostPreviewDark() {
     ComposeAppTheme(darkTheme = true) {
         PostCard(
-            feedPost = FeedPost(), onStatisticsItemClickListener = {}
+            feedPost = FeedPost(), onCommentClickListener = {},
+            onLikeClickListener = {},
+            onViewClickListener = {},
+            onShareClickListener = {}
         )
     }
 }
@@ -180,7 +191,10 @@ fun PreviewTitleRoDark() {
 @Composable
 fun UserStatistics(
     statistics: List<StatisticItem>,
-    onItemClickListener: (StatisticItem) -> Unit
+    onViewClickListener: (StatisticItem) -> Unit,
+    onLikeClickListener: (StatisticItem) -> Unit,
+    onShareClickListener: (StatisticItem) -> Unit,
+    onCommentClickListener: (StatisticItem) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -197,7 +211,7 @@ fun UserStatistics(
                 text = viewItem.count.toString(),
                 imageRes = R.drawable.ic_eye,
                 onItemClickListener = {
-                    onItemClickListener(viewItem)
+                    onViewClickListener(viewItem)
                 }
             )
         }
@@ -210,26 +224,27 @@ fun UserStatistics(
                 text = sharesItem.count.toString(),
                 imageRes = R.drawable.ic_repost,
                 onItemClickListener = {
-                    onItemClickListener(sharesItem)
+                    onShareClickListener(sharesItem)
                 }
             )
             Spacer(modifier = Modifier.size(16.dp))
 
             val commentItem = statistics.getItemByType(StatisticType.COMMENTS)
-            IconText(text = commentItem.count.toString(),
+            IconText(
+                text = commentItem.count.toString(),
                 imageRes = R.drawable.ic_comments,
                 onItemClickListener = {
-                    onItemClickListener(commentItem)
+                    onCommentClickListener(commentItem)
                 }
             )
             Spacer(modifier = Modifier.size(16.dp))
 
-            val likesItem = statistics.getItemByType(StatisticType.COMMENTS)
+            val likesItem = statistics.getItemByType(StatisticType.LIKES)
             IconText(
                 text = likesItem.count.toString(),
                 imageRes = R.drawable.ic_like,
                 onItemClickListener = {
-                    onItemClickListener(likesItem)
+                    onLikeClickListener(likesItem)
                 }
             )
         }
