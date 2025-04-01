@@ -36,23 +36,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
 }
-
-//class MainActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent { TestScreen() }
-//    }
-//}
-//
-//@Composable
-//fun TestScreen() {
-//    val (clicked, setClicked) = remember { mutableStateOf(false) }
-//    Button(onClick = {
-//        setClicked(!clicked) }
-//    ) {
-//        Text(if (clicked) "Clicked!" else "Click me")
-//    }
-//}
