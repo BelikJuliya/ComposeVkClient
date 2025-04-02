@@ -27,7 +27,9 @@ class MainViewModel : ViewModel() {
     val screenState: LiveData<HomeScreenState> = _screenState
 
     fun updateCount(statistic: StatisticItem, model: FeedPost) {
-        val oldPosts = screenState.value?.toMutableList() ?: mutableListOf()
+        val currentState = screenState.value
+        if (currentState !is HomeScreenState.Posts) return
+        val oldPosts = currentState.posts.toMutableList()
         val oldStatistics = model.statistics
         val newStatistics = oldStatistics.map { oldItem ->
             if (oldItem.type == statistic.type) {
@@ -38,16 +40,21 @@ class MainViewModel : ViewModel() {
         }
         val newFeedPost = model.copy(statistics = newStatistics)
 
-        _screenState.value = oldPosts.map {
+        val newPosts = oldPosts.map {
             if (it.id == model.id) {
                 newFeedPost
             } else it
         }
+
+        _screenState.value = HomeScreenState.Posts(posts = newPosts)
     }
 
     fun deleteItem(model: FeedPost) {
-        val newItems = screenState.value?.toMutableList() ?: mutableListOf()
+        val currentState = screenState.value
+        if (currentState !is HomeScreenState.Posts) return
+
+        val newItems = currentState.posts.toMutableList()
         newItems.remove(model)
-        _screenState.value = newItems
+        _screenState.value = HomeScreenState.Posts(posts = newItems)
     }
 }
