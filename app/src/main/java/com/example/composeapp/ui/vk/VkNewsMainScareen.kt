@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.composeapp.navigation.AppNavGraph
+import com.example.composeapp.navigation.rememberNavigationState
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val navController = rememberNavController()
+    val navigationState = rememberNavigationState()
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.Favourite,
@@ -28,13 +28,13 @@ fun MainScreen(viewModel: MainViewModel) {
                 contentColor = MaterialTheme.colorScheme.primary,
                 containerColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
                 items.forEach { item ->
                     NavigationBarItem(
                         selected = currentRoute == item.screen.route,
                         onClick = {
-                            navController.navigate(item.screen.route)
+                            navigationState.navigateTo(item.screen.route)
                         },
                         icon = {
                             Icon(imageVector = item.icon, contentDescription = null)
@@ -48,7 +48,7 @@ fun MainScreen(viewModel: MainViewModel) {
         },
         content = { padding ->
             AppNavGraph(
-                navHostController = navController,
+                navHostController = navigationState.navHostController,
                 homeScreenContent = {
                     HomeScreen(
                         viewModel = viewModel,
