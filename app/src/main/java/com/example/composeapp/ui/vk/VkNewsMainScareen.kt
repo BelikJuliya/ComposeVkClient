@@ -27,6 +27,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -44,9 +45,10 @@ val TAG = "MainScreen"
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
     val feedPost = viewModel.feedPost.observeAsState(FeedPost())
+    val selectedNavItem by viewModel.selectedNavItem.observeAsState(NavigationItem.Home)
 
     // Состояние выбранного элемента навигации
-    val selectedItemPosition = remember { mutableIntStateOf(0) }
+
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.Favourite,
@@ -59,11 +61,11 @@ fun MainScreen(viewModel: MainViewModel) {
                 contentColor = MaterialTheme.colorScheme.primary,
                 containerColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                items.forEachIndexed { index, item ->
+                items.forEach{ item ->
                     NavigationBarItem(
-                        selected = selectedItemPosition.intValue == index,
+                        selected = selectedNavItem == item,
                         onClick = {
-                            selectedItemPosition.intValue = index
+                            viewModel.selectNavItem(item)
                         },
                         icon = {
                             Icon(imageVector = item.icon, contentDescription = null)
