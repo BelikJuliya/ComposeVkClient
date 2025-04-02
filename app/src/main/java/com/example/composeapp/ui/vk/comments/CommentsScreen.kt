@@ -36,27 +36,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.domain.PostComment
 
 @Composable
 fun CommentsScreen(
-    feedPost: FeedPost,
-    comments: List<PostComment>,
     onBackPressed: () -> Unit
 ) {
 
-    Scaffold(
-        topBar = {
-            CommentsAppBar(feedPost = feedPost, onBackPressed = onBackPressed)
-        },
-        content = {
-            CommentsList(
-                paddingValues = it,
-                comments = comments
+    val viewModel: CommentsViewModel = viewModel()
+    val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Idle)
+    when (val currentScreenState = screenState.value) {
+        CommentsScreenState.Idle -> Unit
+        is CommentsScreenState.Comments -> {
+            Scaffold(
+                topBar = {
+                    CommentsAppBar(
+                        feedPost = currentScreenState.feedPost,
+                        onBackPressed = onBackPressed
+                    )
+                },
+                content = {
+                    CommentsList(
+                        paddingValues = it,
+                        comments = currentScreenState.comments
+                    )
+                }
             )
         }
-    )
+    }
 }
 
 @Composable

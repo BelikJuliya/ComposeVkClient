@@ -14,14 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.ui.vk.MainScreen
 import com.example.composeapp.ui.theme.ComposeAppTheme
-import com.example.composeapp.ui.vk.MainViewModel
+import com.example.composeapp.ui.vk.news.NewsFeedViewModel
 import com.example.composeapp.ui.vk.comments.CommentsViewModel
 
 class MainActivity : ComponentActivity() {
-
-    val viewModel by viewModels<MainViewModel>()
-
-    val commentsViewModel by viewModels<CommentsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +30,7 @@ class MainActivity : ComponentActivity() {
                         .background(MaterialTheme.colorScheme.background)
                         .padding(8.dp)
                 ) {
-                    MainScreen(newsFeedViewModel = viewModel, commentsViewModel = commentsViewModel)
+                    MainScreen()
                 }
             }
         }

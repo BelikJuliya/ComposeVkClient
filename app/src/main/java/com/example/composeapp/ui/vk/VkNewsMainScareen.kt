@@ -7,19 +7,22 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.navigation.AppNavGraph
 import com.example.composeapp.navigation.rememberNavigationState
-import com.example.composeapp.ui.vk.comments.CommentsViewModel
+import com.example.composeapp.ui.vk.comments.CommentsScreen
 
 @Composable
-fun MainScreen(
-    newsFeedViewModel: MainViewModel,
-    commentsViewModel: CommentsViewModel
-) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
+    val commentsToPost: MutableState<FeedPost?> = remember { mutableStateOf(null) }
+
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.Favourite,
@@ -54,10 +57,18 @@ fun MainScreen(
             AppNavGraph(
                 navHostController = navigationState.navHostController,
                 homeScreenContent = {
-                    HomeScreen(
-                        viewModel = newsFeedViewModel,
-                        paddingValues = padding
-                    )
+                    if (commentsToPost.value == null) {
+                        HomeScreen(
+                            paddingValues = padding,
+                            onCommentClickListener = {
+                                commentsToPost.value = it
+                            }
+                        )
+                    } else {
+                        CommentsScreen {
+                            commentsToPost.value = null
+                        }
+                    }
                 },
                 favouriteScreenContent = {
                     Text("Favourite")

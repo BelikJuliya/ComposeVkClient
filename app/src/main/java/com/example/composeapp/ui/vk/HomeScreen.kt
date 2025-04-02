@@ -1,6 +1,7 @@
 package com.example.composeapp.ui.vk
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -32,46 +32,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeapp.domain.FeedPost
-import com.example.composeapp.navigation.Screen
 import com.example.composeapp.ui.vk.comments.CommentsScreen
+import com.example.composeapp.ui.vk.news.NewsFeedScreenState
+import com.example.composeapp.ui.vk.news.NewsFeedViewModel
 import com.example.composeapp.ui.vk.news.PostCard
 
 @Composable
 fun HomeScreen(
-    viewModel: MainViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onCommentClickListener: (FeedPost) -> Unit
 ) {
-    val screenState = viewModel.screenState.observeAsState(HomeScreenState.Idle)
+    val viewModel: NewsFeedViewModel = viewModel()
+    val screenState = viewModel.screenState.observeAsState(NewsFeedScreenState.Idle)
     when (val currentState = screenState.value) {
-        HomeScreenState.Idle -> Unit
-        is HomeScreenState.Posts -> FeedPosts(
+        NewsFeedScreenState.Idle -> Unit
+
+        is NewsFeedScreenState.Posts -> FeedPosts(
             viewModel = viewModel,
             paddingValues = paddingValues,
-            posts = currentState.posts
+            posts = currentState.posts,
+            onCommentClickListener = onCommentClickListener
         )
-
-        is HomeScreenState.Comments -> {
-            CommentsScreen(
-                feedPost = currentState.feedPost,
-                comments = currentState.comments,
-                onBackPressed = {
-                    viewModel.closeComments()
-                }
-            )
-            // Для хардварной кнопки назад
-            BackHandler {
-                viewModel.closeComments()
-            }
-        }
     }
 }
 
 @Composable
 fun FeedPosts(
     posts: List<FeedPost>,
-    viewModel: MainViewModel,
-    paddingValues: PaddingValues
+    viewModel: NewsFeedViewModel,
+    paddingValues: PaddingValues,
+    onCommentClickListener: (FeedPost) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
@@ -146,7 +140,7 @@ fun FeedPosts(
                             viewModel.updateCount(statistic = statistics, model = feedPost)
                         },
                         onCommentClickListener = { _, feedPost ->
-                            viewModel.showComments(feedPost = feedPost)
+                            onCommentClickListener(feedPost)
                         },
                         onViewClickListener = { statistics, feedPost ->
                             viewModel.updateCount(statistic = statistics, model = feedPost)
