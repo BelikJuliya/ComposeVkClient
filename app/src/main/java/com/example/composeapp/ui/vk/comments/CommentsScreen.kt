@@ -41,12 +41,9 @@ import com.example.composeapp.domain.PostComment
 
 @Composable
 fun CommentsScreen(
-    viewModel: CommentsViewModel,
     feedPost: FeedPost,
-    paddingValues: PaddingValues
+    comments: List<PostComment>
 ) {
-
-    val commentsListState = viewModel.items.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -55,7 +52,7 @@ fun CommentsScreen(
         content = {
             CommentsList(
                 paddingValues = it,
-                commentsListState = commentsListState
+                comments = comments
             )
         }
     )
@@ -106,7 +103,7 @@ fun CommentItem(postComment: PostComment) {
 @Composable
 fun CommentsList(
     paddingValues: PaddingValues,
-    commentsListState: State<List<PostComment>>
+    comments: List<PostComment>
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
@@ -115,7 +112,7 @@ fun CommentsList(
         state = listState
     ) {
         items(
-            items = commentsListState.value,
+            items = comments,
             key = { it.id }
         ) { model ->
             CommentItem(postComment = model)

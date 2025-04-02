@@ -9,7 +9,7 @@ import java.util.Date
 
 class MainViewModel : ViewModel() {
 
-    private val initialList = mutableListOf<FeedPost>().apply {
+    private val sourceList = mutableListOf<FeedPost>().apply {
         repeat(50) {
             add(
                 FeedPost(
@@ -21,11 +21,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private val _feedPosts = MutableLiveData<List<FeedPost>>(initialList)
-    val feedPost: LiveData<List<FeedPost>> = _feedPosts
+    private val initialState = HomeScreenState.Posts(posts = sourceList)
+
+    private val _screenState = MutableLiveData<HomeScreenState>(initialState)
+    val screenState: LiveData<HomeScreenState> = _screenState
 
     fun updateCount(statistic: StatisticItem, model: FeedPost) {
-        val oldPosts = feedPost.value?.toMutableList() ?: mutableListOf()
+        val oldPosts = screenState.value?.toMutableList() ?: mutableListOf()
         val oldStatistics = model.statistics
         val newStatistics = oldStatistics.map { oldItem ->
             if (oldItem.type == statistic.type) {
@@ -36,7 +38,7 @@ class MainViewModel : ViewModel() {
         }
         val newFeedPost = model.copy(statistics = newStatistics)
 
-        _feedPosts.value = oldPosts.map {
+        _screenState.value = oldPosts.map {
             if (it.id == model.id) {
                 newFeedPost
             } else it
@@ -44,8 +46,8 @@ class MainViewModel : ViewModel() {
     }
 
     fun deleteItem(model: FeedPost) {
-        val newItems = feedPost.value?.toMutableList() ?: mutableListOf()
+        val newItems = screenState.value?.toMutableList() ?: mutableListOf()
         newItems.remove(model)
-        _feedPosts.value = newItems
+        _screenState.value = newItems
     }
 }

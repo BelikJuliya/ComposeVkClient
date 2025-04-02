@@ -31,6 +31,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composeapp.domain.FeedPost
+import com.example.composeapp.navigation.Screen
+import com.example.composeapp.ui.vk.comments.CommentsScreen
 import com.example.composeapp.ui.vk.news.PostCard
 
 @Composable
@@ -38,9 +41,28 @@ fun HomeScreen(
     viewModel: MainViewModel,
     paddingValues: PaddingValues
 ) {
-    val listState = rememberLazyListState()
-    val postsList = viewModel.feedPost.observeAsState(emptyList())
+    val screenState = viewModel.screenState.observeAsState(HomeScreenState.Idle)
+    when (val currentState = screenState.value) {
+        HomeScreenState.Idle -> Unit
+        is HomeScreenState.Posts -> FeedPosts(
+            viewModel = viewModel,
+            paddingValues = paddingValues,
+            posts = currentState.posts
+        )
 
+        is HomeScreenState.Comments -> CommentsScreen(
+            feedPost = currentState.feedPost,
+            comments = currentState.comments
+        )
+    }
+}
+
+@Composable
+fun FeedPosts(
+    posts: List<FeedPost>,
+    viewModel: MainViewModel,
+    paddingValues: PaddingValues
+) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
         contentPadding = PaddingValues(
@@ -50,10 +72,10 @@ fun HomeScreen(
             end = 4.dp
         ),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        state = listState
+//        state = listState
     ) {
         items(
-            items = postsList.value,
+            items = posts,
             key = { it.id }
         ) { model ->
             // Состояние видимости

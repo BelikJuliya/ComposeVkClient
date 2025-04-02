@@ -10,10 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.navigation.AppNavGraph
 import com.example.composeapp.navigation.rememberNavigationState
-import com.example.composeapp.ui.vk.comments.CommentsScreen
 import com.example.composeapp.ui.vk.comments.CommentsViewModel
 
 @Composable
@@ -56,15 +54,10 @@ fun MainScreen(
             AppNavGraph(
                 navHostController = navigationState.navHostController,
                 homeScreenContent = {
-                    CommentsScreen(
-                        viewModel = commentsViewModel,
-                        feedPost = FeedPost(),
+                    HomeScreen(
+                        viewModel = newsFeedViewModel,
                         paddingValues = padding
                     )
-//                    HomeScreen(
-//                        viewModel = viewModel,
-//                        paddingValues = padding
-//                    )
                 },
                 favouriteScreenContent = {
                     Text("Favourite")
