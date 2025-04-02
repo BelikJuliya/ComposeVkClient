@@ -7,7 +7,9 @@ import com.example.composeapp.domain.PostComment
 import com.example.composeapp.ui.vk.BaseViewModel
 import com.example.composeapp.ui.vk.news.NewsFeedScreenState
 
-class CommentsViewModel :
+class CommentsViewModel(
+    feedPost: FeedPost
+) :
     BaseViewModel<PostComment>(itemFactory = { index ->
         PostComment(
             id = index
@@ -15,7 +17,7 @@ class CommentsViewModel :
     }) {
 
     init {
-        loadComments(FeedPost())
+        loadComments(feedPost)
     }
 
     private val _screenState = MutableLiveData<CommentsScreenState>(CommentsScreenState.Idle)
