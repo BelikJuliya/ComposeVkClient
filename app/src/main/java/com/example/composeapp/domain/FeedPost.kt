@@ -3,7 +3,7 @@ package com.example.composeapp.domain
 import com.example.composeapp.R
 
 data class FeedPost(
-    val postId: Int = 0,
+    override val id: Int = 0,
     val communityName: String = "/dev/null",
     val publicationDate: String = "14:00",
     val avatarResId: Int = R.drawable.me,
@@ -15,4 +15,4 @@ data class FeedPost(
         StatisticItem(type = StatisticType.COMMENTS, count = 8),
         StatisticItem(type = StatisticType.LIKES, count = 27),
     )
-)
+): BaseModel

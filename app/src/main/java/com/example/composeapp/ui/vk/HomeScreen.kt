@@ -54,7 +54,7 @@ fun HomeScreen(
     ) {
         items(
             items = postsList.value,
-            key = { it.postId }
+            key = { it.id }
         ) { model ->
             // Состояние видимости
             var isVisible by remember { mutableStateOf(true) }

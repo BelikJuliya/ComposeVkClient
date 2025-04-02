@@ -13,7 +13,7 @@ class MainViewModel : ViewModel() {
         repeat(50) {
             add(
                 FeedPost(
-                    postId = it,
+                    id = it,
                     communityName = "/dev/null № $it",
                     publicationDate = String.format("dd:MMM:yyyy", Date())
                 )
@@ -37,7 +37,7 @@ class MainViewModel : ViewModel() {
         val newFeedPost = model.copy(statistics = newStatistics)
 
         _feedPosts.value = oldPosts.map {
-            if (it.postId == model.postId) {
+            if (it.id == model.id) {
                 newFeedPost
             } else it
         }

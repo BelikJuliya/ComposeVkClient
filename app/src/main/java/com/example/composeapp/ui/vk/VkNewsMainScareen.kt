@@ -10,11 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.navigation.AppNavGraph
 import com.example.composeapp.navigation.rememberNavigationState
+import com.example.composeapp.ui.vk.comments.CommentsScreen
+import com.example.composeapp.ui.vk.comments.CommentsViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(
+    newsFeedViewModel: MainViewModel,
+    commentsViewModel: CommentsViewModel
+) {
     val navigationState = rememberNavigationState()
     val items = listOf(
         NavigationItem.Home,
@@ -50,10 +56,15 @@ fun MainScreen(viewModel: MainViewModel) {
             AppNavGraph(
                 navHostController = navigationState.navHostController,
                 homeScreenContent = {
-                    HomeScreen(
-                        viewModel = viewModel,
+                    CommentsScreen(
+                        viewModel = commentsViewModel,
+                        feedPost = FeedPost(),
                         paddingValues = padding
                     )
+//                    HomeScreen(
+//                        viewModel = viewModel,
+//                        paddingValues = padding
+//                    )
                 },
                 favouriteScreenContent = {
                     Text("Favourite")
