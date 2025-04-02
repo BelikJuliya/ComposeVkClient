@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.vk
+package com.example.composeapp.ui.vk.news
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
