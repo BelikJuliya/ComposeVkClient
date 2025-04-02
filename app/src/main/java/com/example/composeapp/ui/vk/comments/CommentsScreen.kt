@@ -42,10 +42,14 @@ import com.example.composeapp.domain.PostComment
 
 @Composable
 fun CommentsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    feedPost: FeedPost
 ) {
 
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel(
+        factory = CommentsViewModelFactory(feedPost)
+    )
+
     val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Idle)
     when (val currentScreenState = screenState.value) {
         CommentsScreenState.Idle -> Unit
