@@ -1,5 +1,6 @@
 package com.example.composeapp.ui.vk
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -50,10 +51,19 @@ fun HomeScreen(
             posts = currentState.posts
         )
 
-        is HomeScreenState.Comments -> CommentsScreen(
-            feedPost = currentState.feedPost,
-            comments = currentState.comments
-        )
+        is HomeScreenState.Comments -> {
+            CommentsScreen(
+                feedPost = currentState.feedPost,
+                comments = currentState.comments,
+                onBackPressed = {
+                    viewModel.closeComments()
+                }
+            )
+            // Для хардварной кнопки назад
+            BackHandler {
+                viewModel.closeComments()
+            }
+        }
     }
 }
 
@@ -72,7 +82,6 @@ fun FeedPosts(
             end = 4.dp
         ),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-//        state = listState
     ) {
         items(
             items = posts,
@@ -136,8 +145,8 @@ fun FeedPosts(
                         onShareClickListener = { statistics, feedPost ->
                             viewModel.updateCount(statistic = statistics, model = feedPost)
                         },
-                        onCommentClickListener = { statistics, feedPost ->
-                            viewModel.updateCount(statistic = statistics, model = feedPost)
+                        onCommentClickListener = { _, feedPost ->
+                            viewModel.showComments(feedPost = feedPost)
                         },
                         onViewClickListener = { statistics, feedPost ->
                             viewModel.updateCount(statistic = statistics, model = feedPost)

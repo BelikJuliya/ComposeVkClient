@@ -42,12 +42,13 @@ import com.example.composeapp.domain.PostComment
 @Composable
 fun CommentsScreen(
     feedPost: FeedPost,
-    comments: List<PostComment>
+    comments: List<PostComment>,
+    onBackPressed: () -> Unit
 ) {
 
     Scaffold(
         topBar = {
-            CommentsAppBar(feedPost = feedPost)
+            CommentsAppBar(feedPost = feedPost, onBackPressed = onBackPressed)
         },
         content = {
             CommentsList(
@@ -122,7 +123,7 @@ fun CommentsList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommentsAppBar(feedPost: FeedPost) {
+fun CommentsAppBar(feedPost: FeedPost, onBackPressed: () -> Unit = {}) {
     TopAppBar(
         title = {
             Text(text = "Comments for post id ${feedPost.id}")
@@ -130,6 +131,7 @@ fun CommentsAppBar(feedPost: FeedPost) {
         navigationIcon = {
             IconButton(
                 onClick = {
+                    onBackPressed()
                 }
             ) {
                 Icon(
