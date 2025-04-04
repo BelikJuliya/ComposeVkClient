@@ -23,7 +23,6 @@ import com.example.composeapp.ui.vk.comments.CommentsScreen
 @Composable
 fun MainScreen() {
     val navigationState = rememberNavigationState()
-    val commentsToPost: MutableState<FeedPost?> = remember { mutableStateOf(null) }
 
     val items = listOf(
         NavigationItem.Home,
@@ -66,8 +65,7 @@ fun MainScreen() {
                     HomeScreen(
                         paddingValues = padding,
                         onCommentClickListener = {
-                            commentsToPost.value = it
-                            navigationState.navigateToComments()
+                            navigationState.navigateToComments(it)
                         }
                     )
                 },
@@ -77,9 +75,9 @@ fun MainScreen() {
                 profileScreenContent = {
                     Text("Profile")
                 },
-                commentsScreenContent = {
+                commentsScreenContent = { feedPost ->
                     CommentsScreen(
-                        feedPost = commentsToPost.value!!,
+                        feedPost = feedPost,
                         onBackPressed = {
                             navigationState.navHostController.popBackStack()
                         }
