@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.composeapp.domain.FeedPost
+import com.example.composeapp.navigation.Screen.Companion.KEY_FEED_POST_CONTENT
 import com.example.composeapp.navigation.Screen.Companion.KEY_FEED_POST_ID
 
 fun NavGraphBuilder.homeScreenNavGraph(
@@ -29,7 +30,8 @@ fun NavGraphBuilder.homeScreenNavGraph(
             )
         ) {
             val feedPosId = it.arguments?.getInt(KEY_FEED_POST_ID) ?: 0
-            commentsScreenContent(FeedPost(id = feedPosId))
+            val contentText = it.arguments?.getString(KEY_FEED_POST_CONTENT) ?: ""
+            commentsScreenContent(FeedPost(id = feedPosId, contentText = contentText))
         }
     }
 }
