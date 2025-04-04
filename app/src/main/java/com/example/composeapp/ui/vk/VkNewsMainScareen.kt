@@ -38,7 +38,6 @@ fun MainScreen() {
                 containerColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
                 items.forEach { item ->
                     val isSelected = navBackStackEntry?.destination?.hierarchy?.any {
                         it.route == item.screen.route
@@ -68,7 +67,7 @@ fun MainScreen() {
                         paddingValues = padding,
                         onCommentClickListener = {
                             commentsToPost.value = it
-                            navigationState.navigateTo(Screen.Comments.route)
+                            navigationState.navigateToComments()
                         }
                     )
                 },
