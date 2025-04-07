@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
