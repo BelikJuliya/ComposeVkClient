@@ -2,6 +2,7 @@
 agp = "8.9.1"
 gson = "2.12.1"
 kotlin = "2.0.21"
+parcelize = "1.4.20"
 coreKtx = "1.15.0"
 junit = "4.14-SNAPSHOT"
 junitVersion = "1.2.1"
@@ -39,4 +40,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
+#kotlin-parcelize = { id = "org.jetbrains.kotlin.android", version.ref = "parcelize" }
 

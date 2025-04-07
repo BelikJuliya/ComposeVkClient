@@ -25,12 +25,11 @@ fun NavGraphBuilder.homeScreenNavGraph(
             route = Screen.Comments.route,
             arguments = listOf(
                 navArgument(name = KEY_FEED_POST, builder = {
-                    type = NavType.StringType
+                    type = FeedPost.navigationType
                 })
             )
         ) {
-            val feedPostJson = it.arguments?.getString(KEY_FEED_POST) ?: ""
-            val feedPost = Gson().fromJson(feedPostJson, FeedPost::class.java)
+            val feedPost = it.arguments?.getParcelable<FeedPost>(KEY_FEED_POST) ?: throw IllegalStateException()
             commentsScreenContent(feedPost)
         }
     }
