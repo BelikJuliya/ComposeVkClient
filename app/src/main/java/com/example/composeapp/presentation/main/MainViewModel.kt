@@ -1,6 +1,7 @@
 package com.example.composeapp.presentation.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,9 +15,11 @@ import com.vk.id.AccessToken
 import com.vk.id.VKID
 import com.vk.id.VKIDAuthFail
 import com.vk.id.auth.VKIDAuthCallback
+import com.vk.id.auth.VKIDAuthParams
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+    val TAG = this.javaClass.simpleName
 
     private val _authState = MutableLiveData<AuthState>(AuthState.NotAuthorized)
     val authState: LiveData<AuthState> = _authState
@@ -34,6 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val vkAuthCallback = object : VKIDAuthCallback {
         override fun onAuth(accessToken: AccessToken) {
+            Log.d(TAG, "Bearer token = ${accessToken.token}")
             tokenStorage.saveAccessToken(accessToken)
             _authState.value = AuthState.Authorized(accessToken)
         }
@@ -44,6 +48,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun authorize() = viewModelScope.launch {
-        VKID.instance.authorize(vkAuthCallback)
+        VKID.instance.authorize(vkAuthCallback, params = VKIDAuthParams {
+            scopes = setOf("wall", "friends")
+        })
     }
 }
