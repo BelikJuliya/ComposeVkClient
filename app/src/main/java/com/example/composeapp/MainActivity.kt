@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.ui.vk.MainScreen
@@ -29,8 +30,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeAppTheme {
-                rememberLauncherForActivityResult(contract = VK.getVKAuthActivityResultContract()) {
-                    val authLauncher = VK.login(this) { result: VKAuthenticationResult ->
+                val authLauncher = rememberLauncherForActivityResult(contract = VK.getVKAuthActivityResultContract()) {
+                    VK.login(this) { result: VKAuthenticationResult ->
                         when (result) {
                             is VKAuthenticationResult.Success -> {
                                 // User passed authorization
@@ -41,18 +42,9 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    authLauncher.launch(arrayListOf(VKScope.WALL))
-
                 }
-
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(8.dp)
-                ) {
-                    MainScreen()
-                }
+                SideEffect { authLauncher.launch(arrayListOf(VKScope.WALL)) }
+                MainScreen()
             }
         }
     }
