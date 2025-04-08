@@ -1,6 +1,7 @@
 package com.example.composeapp.presentation.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -24,6 +25,10 @@ import com.vk.id.VKID
 import com.vk.id.VKIDAuthFail
 import com.vk.id.auth.VKIDAuthCallback
 import com.vk.id.auth.VKIDAuthParams
+import com.vk.id.onetap.compose.onetap.sheet.OneTapBottomSheet
+import com.vk.id.onetap.compose.onetap.sheet.rememberOneTapBottomSheetState
+import com.vk.sdk.api.friends.FriendsService
+import com.vk.sdk.api.users.dto.UsersFieldsDto
 
 class MainActivity : ComponentActivity() {
 
@@ -42,24 +47,26 @@ class MainActivity : ComponentActivity() {
                     }
 
                     is AuthState.NotAuthorized -> {
-//                        LoginScreen {
+//                        VKIDAuthScreen()
                         SideEffect {
-                            VKID.instance.authorize(
-                                lifecycleOwner = this,
-                                callback = object : VKIDAuthCallback {
-                                        override fun onAuth(accessToken: AccessToken) {
-                                            viewModel.performAuthResult(AuthState.Authorized(accessToken))
-                                        }
+                            viewModel.authorize()
 
-                                        override fun onFail(fail: VKIDAuthFail) {
-                                            viewModel.performAuthResult(AuthState.NotAuthorized)
-                                        }
-
-                                    },
-                                params = VKIDAuthParams {
-                                    scopes = setOf("wall")
-                                }
-                            )
+//                            VKID.instance.authorize(
+//                                lifecycleOwner = this,
+//                                callback = object : VKIDAuthCallback {
+//                                    override fun onAuth(accessToken: AccessToken) {
+//                                        viewModel.performAuthResult(AuthState.Authorized(accessToken))
+//                                    }
+//
+//                                    override fun onFail(fail: VKIDAuthFail) {
+//                                        viewModel.performAuthResult(AuthState.NotAuthorized)
+//                                    }
+//
+//                                },
+//                                params = VKIDAuthParams {
+//                                    scopes = setOf("wall")
+//                                }
+//                            )
                         }
                     }
 
@@ -73,13 +80,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginClick: () -> Unit) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Button(onClick = { onLoginClick() }) {
-            HttpMultipartEntry.Text("Войти через VK")
-        }
-    }
+fun VKIDAuthScreen() {
+    val bottomSheetState = rememberOneTapBottomSheetState()
+    OneTapBottomSheet(
+        state = bottomSheetState,
+        onAuth = { oAuth, accessToken ->
+            Log.d("MainActivity", "$oAuth, $accessToken" )
+        },
+        serviceName = "Some app"
+    )
+    //...
 }

@@ -7,6 +7,7 @@ coilCompose = "3.1.0"
 desugar_jdk_libs = "2.1.5"
 gson = "2.12.1"
 kotlin = "2.0.21"
+onetapCompose = "2.3.1"
 parcelize = "1.4.20"
 coreKtx = "1.15.0"
 junit = "4.14-SNAPSHOT"
@@ -19,6 +20,7 @@ runtimeLivedata = "1.7.8"
 navigation = "2.8.9"
 serialization = "1.6.3"
 vkid = "2.3.1"
+vkSdkSupport = "2.3.1"
 
 [libraries]
 android-sdk = { module = "com.vk:android-sdk", version.ref = "androidSdkVersion" }
@@ -47,6 +49,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose" , version.ref = "navigation" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+onetap-compose = { module = "com.vk.id:onetap-compose", version.ref = "onetapCompose" }
+vk-sdk-support = { module = "com.vk.id:vk-sdk-support", version.ref = "vkSdkSupport" }
 vkid = { module = "com.vk.id:vkid", version.ref = "vkid" }
 
 [plugins]

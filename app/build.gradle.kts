@@ -20,14 +20,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        // Добавление манифестных плейсхолдеров
-
-        addManifestPlaceholders(mapOf(
-            "VKIDRedirectHost" to "vk.com", // Обычно vk.com.
-            "VKIDRedirectScheme" to "vk1233445", // Строго в формате vk{ID приложения}.
-            "VKIDClientID" to "53397832",
-            "VKIDClientSecret" to "2BCKQi4z75Bkn0N4ObBn"
-        ))
     }
 
     buildTypes {
@@ -64,8 +56,6 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.gson)
-//    testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -77,9 +67,8 @@ dependencies {
     implementation(libs.android.sdk.api)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.vkid)
-//    implementation (libs.android.sdk)
-
-//    implementation(libs.androidsdk)
+    implementation(libs.onetap.compose)
+    implementation(libs.vk.sdk.support)
 }
 
 

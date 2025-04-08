@@ -10,5 +10,6 @@ class VkNewsApp: Application() {
         super.onCreate()
         VKID.init(this)
         VKID.instance.setLocale(Locale("ru"))
+        VKID.logsEnabled = true
     }
 }
