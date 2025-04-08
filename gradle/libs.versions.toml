@@ -18,6 +18,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.03.01"
 runtimeLivedata = "1.7.8"
 navigation = "2.8.9"
+securityCrypto = "1.1.0-alpha06"
 serialization = "1.6.3"
 vkid = "2.3.1"
 vkSdkSupport = "2.3.1"
@@ -29,6 +30,7 @@ android-sdk-core = { module = "com.vk:android-sdk-core", version.ref = "androidS
 androidsdk = { module = "com.vk:androidsdk", version.ref = "androidsdk" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }

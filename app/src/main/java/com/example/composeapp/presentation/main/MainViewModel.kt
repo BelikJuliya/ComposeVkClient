@@ -21,8 +21,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _authState = MutableLiveData<AuthState>(AuthState.NotAuthorized)
     val authState: LiveData<AuthState> = _authState
 
+    private val tokenStorage = SecureTokenStorage(application)
+
+    init {
+        val token = tokenStorage.getAccessToken()
+        if (token != null) {
+            _authState.value = AuthState.Authorized(token)
+        } else {
+            _authState.value = AuthState.NotAuthorized
+        }
+    }
+
     private val vkAuthCallback = object : VKIDAuthCallback {
         override fun onAuth(accessToken: AccessToken) {
+            tokenStorage.saveAccessToken(accessToken)
             _authState.value = AuthState.Authorized(accessToken)
         }
 
@@ -33,18 +45,5 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun authorize() = viewModelScope.launch {
         VKID.instance.authorize(vkAuthCallback)
-    }
-
-    fun performAuthResult(result: AuthState) {
-        when (result) {
-            is AuthState.Authorized -> saveToken(result.accessToken)
-            AuthState.Initial -> Unit
-            AuthState.NotAuthorized -> Unit
-        }
-        _authState.value = result
-    }
-
-    private fun saveToken(accessToken: AccessToken) {
-
     }
 }
