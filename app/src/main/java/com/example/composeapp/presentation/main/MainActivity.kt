@@ -6,6 +6,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
@@ -19,21 +21,28 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeAppTheme {
-                val authLauncher = rememberLauncherForActivityResult(contract = VK.getVKAuthActivityResultContract()) {
-                    VK.login(this) { result: VKAuthenticationResult ->
-                        when (result) {
-                            is VKAuthenticationResult.Success -> {
-                                // User passed authorization
-                            }
+                val viewModel: MainViewModel = viewModel()
+                val authState = viewModel.authState.observeAsState(AuthState.Initial)
 
-                            is VKAuthenticationResult.Failed -> {
-                                // User didn't pass authorization
-                            }
-                        }
+                val launcher = rememberLauncherForActivityResult(
+                    contract = VK.getVKAuthActivityResultContract()
+                ) {
+                    viewModel.performAuthResult(it)
+                }
+
+                when (authState.value) {
+                    is AuthState.Authorized -> {
+                        MainScreen()
+                    }
+                    is AuthState.NotAuthorized -> {
+//                        LoginScreen {
+                            launcher.launch(listOf(VKScope.WALL))
+//                        }
+                    }
+                    else -> {
+
                     }
                 }
-                SideEffect { authLauncher.launch(arrayListOf(VKScope.WALL)) }
-                MainScreen()
             }
         }
     }
