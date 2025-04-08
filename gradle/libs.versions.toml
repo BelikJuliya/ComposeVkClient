@@ -1,7 +1,10 @@
 [versions]
 agp = "8.9.1"
+androidsdk = "4.0.0"
 androidSdkCore = "4.1.0"
+androidSdkVersion = "3.1.0"
 coilCompose = "3.1.0"
+desugar_jdk_libs = "2.1.5"
 gson = "2.12.1"
 kotlin = "2.0.21"
 parcelize = "1.4.20"
@@ -15,14 +18,18 @@ composeBom = "2025.03.01"
 runtimeLivedata = "1.7.8"
 navigation = "2.8.9"
 serialization = "1.6.3"
+vkid = "2.3.1"
 
 [libraries]
+android-sdk = { module = "com.vk:android-sdk", version.ref = "androidSdkVersion" }
 android-sdk-api = { module = "com.vk:android-sdk-api", version.ref = "androidSdkCore" }
 android-sdk-core = { module = "com.vk:android-sdk-core", version.ref = "androidSdkCore" }
+androidsdk = { module = "com.vk:androidsdk", version.ref = "androidsdk" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -40,6 +47,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose" , version.ref = "navigation" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+vkid = { module = "com.vk.id:vkid", version.ref = "vkid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

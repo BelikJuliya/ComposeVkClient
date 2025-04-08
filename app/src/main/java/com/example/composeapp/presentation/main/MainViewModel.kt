@@ -9,24 +9,30 @@ import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthenticationResult
+import com.vk.id.AccessToken
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _authState = MutableLiveData<AuthState>(AuthState.Initial)
+    private val _authState = MutableLiveData<AuthState>(AuthState.NotAuthorized)
     val authState: LiveData<AuthState> = _authState
 
-    init {
-        val storage = VKPreferencesKeyValueStorage(application)
-        val token = VKAccessToken.restore(storage)
-        val loggedIn = token != null && token.isValid
-        _authState.value = if (loggedIn) AuthState.Authorized else AuthState.NotAuthorized
+//    init {
+//        val storage = VKPreferencesKeyValueStorage(application)
+//        val token = VKAccessToken.restore(storage)
+//        val loggedIn = token != null && token.isValid
+//        _authState.value = if (loggedIn) AuthState.Authorized(token!!) else AuthState.NotAuthorized
+//    }
+
+    fun performAuthResult(result: AuthState) {
+        when(result) {
+            is AuthState.Authorized -> saveToken(result.accessToken)
+            AuthState.Initial -> Unit
+            AuthState.NotAuthorized -> Unit
+        }
+        _authState.value = result
     }
 
-    fun performAuthResult(result: VKAuthenticationResult) {
-        if (result is VKAuthenticationResult.Success) {
-            _authState.value = AuthState.Authorized
-        } else {
-            _authState.value = AuthState.NotAuthorized
-        }
+    private fun saveToken(accessToken: AccessToken) {
+
     }
 }

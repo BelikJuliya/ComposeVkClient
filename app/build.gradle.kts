@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.1.20"
     id("kotlin-parcelize")
+    id("vkid.manifest.placeholders")
+
 }
 
 android {
@@ -18,6 +20,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Добавление манифестных плейсхолдеров
+
+        addManifestPlaceholders(mapOf(
+            "VKIDRedirectHost" to "vk.com", // Обычно vk.com.
+            "VKIDRedirectScheme" to "vk1233445", // Строго в формате vk{ID приложения}.
+            "VKIDClientID" to "53397832",
+            "VKIDClientSecret" to "2BCKQi4z75Bkn0N4ObBn"
+        ))
     }
 
     buildTypes {
@@ -29,6 +39,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -53,8 +64,8 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.gson)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+//    testImplementation(libs.junit)
+//    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -64,4 +75,11 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.android.sdk.core)
     implementation(libs.android.sdk.api)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.vkid)
+//    implementation (libs.android.sdk)
+
+//    implementation(libs.androidsdk)
 }
+
+

@@ -1,3 +1,5 @@
+import java.net.URI
+
 pluginManagement {
     repositories {
         google {
@@ -8,6 +10,8 @@ pluginManagement {
             }
         }
         mavenCentral()
+        maven(url = "https://artifactory-external.vkpartner.ru/artifactory/vkid-sdk-android/")
+        maven(url = "https://artifactory-external.vkpartner.ru/artifactory/maven/")
         gradlePluginPortal()
     }
 }
@@ -16,6 +20,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = URI("https://artifactory-external.vkpartner.ru/artifactory/vkid-sdk-android/")
+        }
+        maven {
+            url = URI("https://artifactory-external.vkpartner.ru/artifactory/maven/")
+        }
     }
 }
 
