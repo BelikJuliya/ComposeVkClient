@@ -70,6 +70,17 @@ dependencies {
     implementation(libs.onetap.compose)
     implementation(libs.vk.sdk.support)
     implementation(libs.androidx.security.crypto)
+    implementation (libs.retrofit)
+
+    // Converter (Gson - популярный вариант, но есть и другие)
+    implementation (libs.converter.gson)
+
+    // Coroutines Adapter (для удобной работы с корутинами) - Optional, but highly recommended
+    implementation (libs.retrofit2.kotlin.coroutines.adapter)
+
+    // OkHttp (Retrofit использует OkHttp под капотом, но иногда полезно иметь его явно)
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor) // Для логирования запросов (полезно при отладке)
 
 }
 
