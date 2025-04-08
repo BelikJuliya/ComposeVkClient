@@ -1,7 +1,5 @@
-package com.example.composeapp.ui.vk
+package com.example.composeapp.presentation.news
 
-import androidx.activity.compose.BackHandler
-import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -32,17 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeapp.domain.FeedPost
-import com.example.composeapp.ui.vk.comments.CommentsScreen
-import com.example.composeapp.ui.vk.news.NewsFeedScreenState
-import com.example.composeapp.ui.vk.news.NewsFeedViewModel
-import com.example.composeapp.ui.vk.news.PostCard
 
 @Composable
-fun HomeScreen(
+fun NewsFeedState(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {

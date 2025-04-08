@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.vk.comments
+package com.example.composeapp.sample
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

@@ -1,23 +1,12 @@
-package com.example.composeapp
+package com.example.composeapp.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.example.composeapp.ui.vk.MainScreen
 import com.example.composeapp.ui.theme.ComposeAppTheme
-import com.example.composeapp.ui.vk.news.NewsFeedViewModel
-import com.example.composeapp.ui.vk.comments.CommentsViewModel
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope

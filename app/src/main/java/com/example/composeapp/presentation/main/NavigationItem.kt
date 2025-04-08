@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.vk
+package com.example.composeapp.presentation.main
 
 import com.example.composeapp.navigation.Screen
 import androidx.compose.material.icons.Icons

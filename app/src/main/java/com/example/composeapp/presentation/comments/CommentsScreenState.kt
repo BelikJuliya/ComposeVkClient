@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.vk.comments
+package com.example.composeapp.presentation.comments
 
 import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.domain.PostComment

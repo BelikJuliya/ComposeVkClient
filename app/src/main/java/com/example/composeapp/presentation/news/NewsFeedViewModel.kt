@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.vk.news
+package com.example.composeapp.presentation.news
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

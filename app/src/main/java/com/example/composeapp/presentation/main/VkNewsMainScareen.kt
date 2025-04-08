@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.vk
+package com.example.composeapp.presentation.main
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -7,18 +7,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.navigation.AppNavGraph
-import com.example.composeapp.navigation.Screen
 import com.example.composeapp.navigation.rememberNavigationState
-import com.example.composeapp.ui.vk.comments.CommentsScreen
+import com.example.composeapp.presentation.comments.CommentsScreen
+import com.example.composeapp.presentation.news.NewsFeedState
 
 @Composable
 fun MainScreen() {
@@ -62,7 +58,7 @@ fun MainScreen() {
             AppNavGraph(
                 navHostController = navigationState.navHostController,
                 newsFeedScreenContent = {
-                    HomeScreen(
+                    NewsFeedState(
                         paddingValues = padding,
                         onCommentClickListener = {
                             navigationState.navigateToComments(it)
