@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.example.composeapp.R
 import com.example.composeapp.domain.FeedPost
 import com.example.composeapp.domain.StatisticItem
@@ -72,12 +74,12 @@ fun PostCard(
                     text = contentText,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                Image(
+                AsyncImage(
+                    model = feedPost.contentImageUrl,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .width(200.dp)
+                        .wrapContentHeight()
                         .padding(all = 4.dp),
-                    painter = painterResource(contentImageResId),
                     contentDescription = "Fish",
                     contentScale = ContentScale.FillWidth
                 )
@@ -140,11 +142,11 @@ fun PostHeader(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(
+        AsyncImage(
+            model = feedPost.contentImageUrl,
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape),
-            painter = painterResource(feedPost.avatarResId),
             contentDescription = "Avatar",
             contentScale = ContentScale.Fit
         )

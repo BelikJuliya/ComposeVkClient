@@ -14,6 +14,9 @@ import com.vk.id.AccessToken
 import com.vk.id.VKID
 import com.vk.id.VKIDAuthFail
 import com.vk.id.auth.VKIDAuthCallback
+import com.vk.id.auth.VKIDAuthParams
+import com.vk.id.logout.VKIDLogoutCallback
+import com.vk.id.logout.VKIDLogoutFail
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -43,7 +46,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    private suspend fun logout() {
+        VKID.instance.logout(
+            object : VKIDLogoutCallback {
+                override fun onFail(fail: VKIDLogoutFail) {
+                }
+
+                override fun onSuccess() {
+
+                }
+            }
+        )
+    }
+
     fun authorize() = viewModelScope.launch {
-        VKID.instance.authorize(vkAuthCallback)
+        VKID.instance.authorize(vkAuthCallback, params = VKIDAuthParams {
+            scopes = setOf("wall", "friends")
+        })
     }
 }

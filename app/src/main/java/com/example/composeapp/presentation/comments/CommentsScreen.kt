@@ -156,14 +156,14 @@ fun CommentsAppBar(feedPost: FeedPost, onBackPressed: () -> Unit = {}) {
     )
 }
 
-@Preview
-@Composable
-fun AppBarPreview() {
-    CommentsAppBar(FeedPost())
-}
-
-@Preview
-@Composable
-fun commentItemPreview() {
-    CommentItem(PostComment())
-}
+//@Preview
+//@Composable
+//fun AppBarPreview() {
+//    CommentsAppBar(FeedPost())
+//}
+//
+//@Preview
+//@Composable
+//fun commentItemPreview() {
+//    CommentItem(PostComment())
+//}

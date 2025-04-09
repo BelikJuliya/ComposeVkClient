@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultCallback
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -47,26 +48,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     is AuthState.NotAuthorized -> {
-//                        VKIDAuthScreen()
                         SideEffect {
                             viewModel.authorize()
-
-//                            VKID.instance.authorize(
-//                                lifecycleOwner = this,
-//                                callback = object : VKIDAuthCallback {
-//                                    override fun onAuth(accessToken: AccessToken) {
-//                                        viewModel.performAuthResult(AuthState.Authorized(accessToken))
-//                                    }
-//
-//                                    override fun onFail(fail: VKIDAuthFail) {
-//                                        viewModel.performAuthResult(AuthState.NotAuthorized)
-//                                    }
-//
-//                                },
-//                                params = VKIDAuthParams {
-//                                    scopes = setOf("wall")
-//                                }
-//                            )
                         }
                     }
 
