@@ -1,5 +1,6 @@
 package com.example.composeapp.presentation.news
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,14 +40,22 @@ import com.example.composeapp.domain.model.FeedPost
 import com.example.composeapp.presentation.getApplicationComponent
 import com.example.composeapp.ui.theme.DarkBlue
 
+const val TAG = "MainScreen"
+
 @Composable
 fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
+    LaunchedEffect(keys = arrayOf(Unit)) {
+        Log.d(TAG, "NewsFeedScreen: render content")
+    }
     val component = getApplicationComponent()
     val viewModel: NewsFeedViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
+
+    SideEffect { Log.d(TAG, "NewsFeedScreen: RECOMPOSITION state collected $screenState") }
+
 
     NewsFeedScreenContent(
         screenState = screenState,

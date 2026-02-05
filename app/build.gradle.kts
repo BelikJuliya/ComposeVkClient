@@ -88,6 +88,9 @@ dependencies {
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
 
+    debugImplementation( libs.library)
+    releaseImplementation( libs.library.no.op)
+
 }
 
 kapt {

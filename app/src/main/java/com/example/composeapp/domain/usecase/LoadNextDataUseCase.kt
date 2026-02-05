@@ -1,5 +1,6 @@
 package com.example.composeapp.domain.usecase
 
+import android.util.Log
 import com.example.composeapp.domain.repoository.NewsFeedRepository
 import javax.inject.Inject
 
@@ -8,6 +9,7 @@ class LoadNextDataUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke() {
-        repository.loadNextData()
+        val nextData =repository.loadNextData()
+        Log.d("LoadNextDataUseCase", "nextData = $nextData")
     }
 }

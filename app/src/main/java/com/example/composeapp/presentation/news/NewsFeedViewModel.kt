@@ -32,10 +32,23 @@ class NewsFeedViewModel @Inject constructor(
 
     private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
 
+    init {
+        Log.d(TAG, "init: loadNextRecommendations")
+        loadNextRecommendations()
+    }
+
     val screenState = recommendationsFlow
-        .filter { it.isNotEmpty() }
-        .map { NewsFeedScreenState.Posts(posts = it) as NewsFeedScreenState }
-        .onStart { emit(NewsFeedScreenState.Loading) }
+        .filter {
+            Log.d(TAG, "filter: $it")
+            it.isNotEmpty()
+        }
+        .map {
+            Log.d(TAG, "Create posts state: $it")
+            NewsFeedScreenState.Posts(posts = it) as NewsFeedScreenState 
+        }
+        .onStart {
+            Log.d(TAG, "onStart:: emit loading state ")
+            emit(NewsFeedScreenState.Loading) }
         .mergeWith(loadNextDataFlow)
 
     fun loadNextRecommendations() {

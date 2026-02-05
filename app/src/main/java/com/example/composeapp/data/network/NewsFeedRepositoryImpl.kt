@@ -1,5 +1,6 @@
 package com.example.composeapp.data.network
 
+import android.util.Log
 import com.example.composeapp.data.mapper.NewsFeedMapper
 import com.example.composeapp.domain.model.FeedPost
 import com.example.composeapp.domain.model.PostComment
@@ -71,6 +72,7 @@ class NewsFeedRepositoryImpl @Inject constructor(
             } else {
                 apiService.loadRecommendations(getAccessToken(), startFrom)
             }
+            Log.d("MainScreen", "loadedListFlow: response = $response")
             nextFrom = response.newsFeedContent.nextFrom
             val posts = mapper.mapResponseToPosts(response)
             _feedPosts.addAll(posts)

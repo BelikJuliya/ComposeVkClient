@@ -1,5 +1,6 @@
 package com.example.composeapp.domain.usecase
 
+import android.util.Log
 import com.example.composeapp.domain.repoository.NewsFeedRepository
 import com.example.composeapp.domain.model.FeedPost
 import kotlinx.coroutines.flow.StateFlow
@@ -10,6 +11,10 @@ class GetRecommendationsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): StateFlow<List<FeedPost>> {
-        return repository.getRecommendations()
+        val flow = repository.getRecommendations()
+        val list = flow.value.firstOrNull()
+        Log.d("MainScreen", "GetRecommendationsUseCase: recommendations loaded $list")
+
+        return flow
     }
 }
