@@ -27,6 +27,7 @@ securityCrypto = "1.1.0-alpha06"
 serialization = "1.6.3"
 vkid = "2.3.1"
 vkSdkSupport = "2.3.1"
+dagger = "2.51.1"
 
 [libraries]
 android-sdk = { module = "com.vk:android-sdk", version.ref = "androidSdkVersion" }
@@ -64,6 +65,9 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofit2KotlinCoroutinesAdapter" }
 vk-sdk-support = { module = "com.vk.id:vk-sdk-support", version.ref = "vkSdkSupport" }
 vkid = { module = "com.vk.id:vkid", version.ref = "vkid" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -71,4 +75,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
 #kotlin-parcelize = { id = "org.jetbrains.kotlin.android", version.ref = "parcelize" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt" }
+
 

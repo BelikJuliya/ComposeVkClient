@@ -1,7 +1,6 @@
 package com.example.composeapp.presentation.news
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,9 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.composeapp.R
-import com.example.composeapp.domain.FeedPost
-import com.example.composeapp.domain.StatisticItem
-import com.example.composeapp.domain.StatisticType
+import com.example.composeapp.domain.model.FeedPost
+import com.example.composeapp.domain.model.StatisticItem
+import com.example.composeapp.domain.model.StatisticType
 import com.example.composeapp.ui.theme.ComposeAppTheme
 
 @Composable
@@ -306,22 +305,22 @@ fun IconTextPreviewDark() {
     }
 }
 
-@Preview
-@Composable
-fun PreviewBottomRowLight() {
-    ComposeAppTheme(darkTheme = false) {
-        UserStatistics(
-            model = FeedPost()
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewBottomRowLight() {
+//    ComposeAppTheme(darkTheme = false) {
+//        UserStatistics(
+//            model = FeedPost()
+//        )
+//    }
+//}
 
-@Preview
-@Composable
-fun PreviewBottomRowDark() {
-    ComposeAppTheme(darkTheme = true) {
-        UserStatistics(
-            model = FeedPost()
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewBottomRowDark() {
+//    ComposeAppTheme(darkTheme = true) {
+//        UserStatistics(
+//            model = FeedPost()
+//        )
+//    }
+//}

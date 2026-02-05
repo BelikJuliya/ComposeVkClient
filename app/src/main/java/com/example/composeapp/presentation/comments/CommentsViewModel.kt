@@ -1,28 +1,21 @@
 package com.example.composeapp.presentation.comments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.composeapp.domain.FeedPost
-import com.example.composeapp.domain.PostComment
+import com.example.composeapp.domain.model.FeedPost
+import com.example.composeapp.domain.usecase.GetCommentsUseCase
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CommentsViewModel(
-    feedPost: FeedPost
+class CommentsViewModel @Inject constructor(
+    private val feedPost: FeedPost,
+    private val getCommentsUseCase: GetCommentsUseCase
 ) : ViewModel() {
 
-    private val _screenState = MutableLiveData<CommentsScreenState>(CommentsScreenState.Idle)
-    val screenState: LiveData<CommentsScreenState> = _screenState
-
-    init {
-        loadComments(feedPost)
-    }
-
-    private fun loadComments(feedPost: FeedPost) {
-        val comments = mutableListOf<PostComment>().apply {
-            repeat(15) {
-                add(PostComment(id = it))
-            }
+    val screenState = getCommentsUseCase(feedPost)
+        .map {
+            CommentsScreenState.Comments(
+                feedPost = feedPost,
+                comments = it
+            )
         }
-        _screenState.value = CommentsScreenState.Comments(feedPost = feedPost, comments = comments)
-    }
 }

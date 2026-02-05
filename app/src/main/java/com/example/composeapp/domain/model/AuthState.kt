@@ -1,5 +1,4 @@
-package com.example.composeapp.presentation.main
-
+package com.example.composeapp.domain.model
 
 sealed class AuthState {
 

@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "2.1.20"
     id("kotlin-parcelize")
     id("vkid.manifest.placeholders")
+    id("org.jetbrains.kotlin.kapt")
 
 }
 
@@ -84,6 +85,13 @@ dependencies {
     implementation (libs.okhttp)
     implementation (libs.logging.interceptor) // Для логирования запросов (полезно при отладке)
 
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 

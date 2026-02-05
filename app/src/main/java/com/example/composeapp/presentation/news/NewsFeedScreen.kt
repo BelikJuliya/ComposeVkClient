@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -21,34 +22,64 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.composeapp.domain.FeedPost
+import com.example.composeapp.domain.model.FeedPost
+import com.example.composeapp.presentation.getApplicationComponent
+import com.example.composeapp.ui.theme.DarkBlue
 
 @Composable
-fun NewsFeedState(
+fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
-    val viewModel: NewsFeedViewModel = viewModel()
-    val screenState = viewModel.screenState.observeAsState(NewsFeedScreenState.Idle)
-    when (val currentState = screenState.value) {
-        NewsFeedScreenState.Idle -> Unit
+    val component = getApplicationComponent()
+    val viewModel: NewsFeedViewModel = viewModel(factory = component.getViewModelFactory())
+    val screenState = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
 
-        is NewsFeedScreenState.Posts -> FeedPosts(
-            viewModel = viewModel,
-            paddingValues = paddingValues,
-            posts = currentState.posts,
-            onCommentClickListener = onCommentClickListener
-        )
+    NewsFeedScreenContent(
+        screenState = screenState,
+        paddingValues = paddingValues,
+        onCommentClickListener = onCommentClickListener,
+        viewModel = viewModel
+    )
+}
+
+@Composable
+private fun NewsFeedScreenContent(
+    screenState: State<NewsFeedScreenState>,
+    paddingValues: PaddingValues,
+    onCommentClickListener: (FeedPost) -> Unit,
+    viewModel: NewsFeedViewModel,
+) {
+    when (val currentState = screenState.value) {
+        is NewsFeedScreenState.Posts -> {
+            FeedPosts(
+                viewModel = viewModel,
+                paddingValues = paddingValues,
+                posts = currentState.posts,
+                onCommentClickListener = onCommentClickListener,
+                nextDataIsLoading = currentState.nextDataIsLoading
+            )
+        }
+        NewsFeedScreenState.Initial -> {}
+        NewsFeedScreenState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = DarkBlue)
+            }
+        }
     }
 }
 
@@ -57,7 +88,8 @@ fun FeedPosts(
     posts: List<FeedPost>,
     viewModel: NewsFeedViewModel,
     paddingValues: PaddingValues,
-    onCommentClickListener: (FeedPost) -> Unit
+    onCommentClickListener: (FeedPost) -> Unit,
+    nextDataIsLoading: Boolean
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
@@ -100,7 +132,7 @@ fun FeedPosts(
                 LaunchedEffect(transitionState.isIdle && !transitionState.currentState) {
                     // Если элемент исчез
                     if (transitionState.isIdle && !transitionState.currentState) {
-                        viewModel.deleteItem(model)
+                        viewModel.remove(model)
                     }
                 }
 
@@ -126,16 +158,16 @@ fun FeedPosts(
                     PostCard(
                         feedPost = model,
                         onLikeClickListener = { statistics, feedPost ->
-                            viewModel.updateCount(statistic = statistics, model = feedPost)
+                            viewModel.changeLikeStatus(feedPost)
                         },
                         onShareClickListener = { statistics, feedPost ->
-                            viewModel.updateCount(statistic = statistics, model = feedPost)
+//                            viewModel.updateCount(statistic = statistics, model = feedPost)
                         },
                         onCommentClickListener = { _, feedPost ->
                             onCommentClickListener(feedPost)
                         },
                         onViewClickListener = { statistics, feedPost ->
-                            viewModel.updateCount(statistic = statistics, model = feedPost)
+//                            viewModel.updateCount(statistic = statistics, model = feedPost)
                         }
                     )
                 }

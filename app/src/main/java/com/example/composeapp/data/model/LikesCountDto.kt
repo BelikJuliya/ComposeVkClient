@@ -2,6 +2,6 @@ package com.example.composeapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class CommentsDto(
-    @SerializedName("count") val count: Int
+data class LikesCountDto(
+    @SerializedName("likes") val count: Int
 )

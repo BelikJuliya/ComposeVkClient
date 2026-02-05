@@ -1,5 +1,7 @@
 package com.example.composeapp.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class NewsFeedResponseDto(
-    val response: NewsFeedContentDto
+    @SerializedName("response") val newsFeedContent: NewsFeedContentDto
 )

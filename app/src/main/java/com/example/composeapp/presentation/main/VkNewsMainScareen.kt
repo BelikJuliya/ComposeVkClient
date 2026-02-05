@@ -14,7 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.composeapp.navigation.AppNavGraph
 import com.example.composeapp.navigation.rememberNavigationState
 import com.example.composeapp.presentation.comments.CommentsScreen
-import com.example.composeapp.presentation.news.NewsFeedState
+import com.example.composeapp.presentation.news.NewsFeedScreen
 
 @Composable
 fun MainScreen() {
@@ -58,7 +58,7 @@ fun MainScreen() {
             AppNavGraph(
                 navHostController = navigationState.navHostController,
                 newsFeedScreenContent = {
-                    NewsFeedState(
+                    NewsFeedScreen(
                         paddingValues = padding,
                         onCommentClickListener = {
                             navigationState.navigateToComments(it)

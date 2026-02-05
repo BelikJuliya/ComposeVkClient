@@ -1,4 +1,4 @@
-package com.example.composeapp.domain
+package com.example.composeapp.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -6,9 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class StatisticItem(
     val type: StatisticType,
-    val count: Int = 0,
-
-): Parcelable
+    val count: Int = 0
+) : Parcelable
 
 enum class StatisticType {
     VIEWS, COMMENTS, SHARES, LIKES
