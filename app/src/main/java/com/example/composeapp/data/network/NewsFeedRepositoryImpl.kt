@@ -2,6 +2,17 @@ package com.example.composeapp.data.network
 
 import android.util.Log
 import com.example.composeapp.data.mapper.NewsFeedMapper
+import com.example.composeapp.data.model.AttachmentDto
+import com.example.composeapp.data.model.CommentsDto
+import com.example.composeapp.data.model.GroupDto
+import com.example.composeapp.data.model.LikesDto
+import com.example.composeapp.data.model.NewsFeedContentDto
+import com.example.composeapp.data.model.NewsFeedResponseDto
+import com.example.composeapp.data.model.PhotoDto
+import com.example.composeapp.data.model.PhotoUrlDto
+import com.example.composeapp.data.model.PostDto
+import com.example.composeapp.data.model.RepostsDto
+import com.example.composeapp.data.model.ViewsDto
 import com.example.composeapp.domain.model.FeedPost
 import com.example.composeapp.domain.model.PostComment
 import com.example.composeapp.domain.model.StatisticItem
@@ -67,10 +78,14 @@ class NewsFeedRepositoryImpl @Inject constructor(
                 emit(feedPosts)
                 return@collect
             }
-            val response = if (startFrom == null) {
+            var response = if (startFrom == null) {
                 apiService.loadRecommendations(getAccessToken())
             } else {
                 apiService.loadRecommendations(getAccessToken(), startFrom)
+            }
+            // Метод апи перестал поддерживаться, поэтому временно заменен на моки
+            if (response.newsFeedContent.posts.isEmpty()) {
+                response = mockNewsFeedResponse()
             }
             Log.d("MainScreen", "loadedListFlow: response = $response")
             nextFrom = response.newsFeedContent.nextFrom
@@ -81,6 +96,56 @@ class NewsFeedRepositoryImpl @Inject constructor(
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
         true
+    }
+
+    fun mockNewsFeedResponse(): NewsFeedResponseDto {
+        val groups = listOf(
+            GroupDto(
+                id = 1L,
+                name = "VK Developers",
+                imageUrl = "https://vk.com/images/community_200.png"
+            ),
+            GroupDto(
+                id = 2L,
+                name = "Android News",
+                imageUrl = "https://vk.com/images/android_200.png"
+            )
+        )
+
+        val posts = (1..15).map { index ->
+            PostDto(
+                id = index.toLong(),
+                communityId = if (index % 2 == 0) 1L else 2L,
+                text = "Тестовый пост №$index\nЭто моковые данные для ленты VK.",
+                date = System.currentTimeMillis() / 1000,
+                likes = LikesDto(
+                    count = (10..500).random(),
+                    userLikes = (10..500).random()
+                ),
+                comments = CommentsDto(count = (0..100).random()),
+                views = ViewsDto(count = (100..10_000).random()),
+                reposts = RepostsDto(count = (0..50).random()),
+                attachments = listOf(
+                    AttachmentDto(
+                        photo = PhotoDto(
+                            photoUrls = listOf(
+                                PhotoUrlDto(
+                                    url = "https://picsum.photos/500/300?random=$index"
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        }
+
+        return NewsFeedResponseDto(
+            newsFeedContent = NewsFeedContentDto(
+                posts = posts,
+                groups = groups,
+                nextFrom = "mock_next_from_1"
+            )
+        )
     }
 
     private val recommendations: StateFlow<List<FeedPost>> = loadedListFlow
