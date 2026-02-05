@@ -1,0 +1,77 @@
+package com.example.composeapp.presentation.news
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.composeapp.domain.model.FeedPost
+import com.example.composeapp.domain.usecase.ChangeLikeStatusUseCase
+import com.example.composeapp.domain.usecase.DeletePostUseCase
+import com.example.composeapp.domain.usecase.GetRecommendationsUseCase
+import com.example.composeapp.domain.usecase.LoadNextDataUseCase
+import com.example.composeapp.mergeWith
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+class NewsFeedViewModel @Inject constructor(
+    private val getRecommendationsUseCase: GetRecommendationsUseCase,
+    private val loadNextDataUseCase: LoadNextDataUseCase,
+    private val changeLikeStatusUseCase: ChangeLikeStatusUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
+) : ViewModel() {
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        Log.d("NewsFeedViewModel", "Exception caught by exception handler")
+    }
+
+    private val recommendationsFlow = getRecommendationsUseCase()
+
+    private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
+
+    init {
+        Log.d(TAG, "init: loadNextRecommendations")
+        loadNextRecommendations()
+    }
+
+    val screenState = recommendationsFlow
+        .filter {
+            Log.d(TAG, "filter: $it")
+            it.isNotEmpty()
+        }
+        .map {
+            Log.d(TAG, "Create posts state: $it")
+            NewsFeedScreenState.Posts(posts = it) as NewsFeedScreenState 
+        }
+        .onStart {
+            Log.d(TAG, "onStart:: emit loading state ")
+            emit(NewsFeedScreenState.Loading) }
+        .mergeWith(loadNextDataFlow)
+
+    fun loadNextRecommendations() {
+        viewModelScope.launch {
+            loadNextDataFlow.emit(
+                NewsFeedScreenState.Posts(
+                    posts = recommendationsFlow.value,
+                    nextDataIsLoading = true
+                )
+            )
+            loadNextDataUseCase()
+        }
+    }
+
+    fun changeLikeStatus(feedPost: FeedPost) {
+        viewModelScope.launch(exceptionHandler) {
+            changeLikeStatusUseCase(feedPost)
+        }
+    }
+
+    fun remove(feedPost: FeedPost) {
+        viewModelScope.launch(exceptionHandler) {
+            deletePostUseCase(feedPost)
+        }
+    }
+}
