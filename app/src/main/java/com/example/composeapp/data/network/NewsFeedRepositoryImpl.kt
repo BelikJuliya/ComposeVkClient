@@ -3,7 +3,10 @@ package com.example.composeapp.data.network
 import android.util.Log
 import com.example.composeapp.data.mapper.NewsFeedMapper
 import com.example.composeapp.data.model.AttachmentDto
+import com.example.composeapp.data.model.CommentDto
+import com.example.composeapp.data.model.CommentsContentDto
 import com.example.composeapp.data.model.CommentsDto
+import com.example.composeapp.data.model.CommentsResponseDto
 import com.example.composeapp.data.model.GroupDto
 import com.example.composeapp.data.model.LikesDto
 import com.example.composeapp.data.model.NewsFeedContentDto
@@ -11,6 +14,7 @@ import com.example.composeapp.data.model.NewsFeedResponseDto
 import com.example.composeapp.data.model.PhotoDto
 import com.example.composeapp.data.model.PhotoUrlDto
 import com.example.composeapp.data.model.PostDto
+import com.example.composeapp.data.model.ProfileDto
 import com.example.composeapp.data.model.RepostsDto
 import com.example.composeapp.data.model.ViewsDto
 import com.example.composeapp.domain.model.FeedPost
@@ -160,13 +164,24 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
     override fun getAuthStateFlow(): StateFlow<AuthState> = authStateFlow
 
+    val TAG = "Comments"
+
     override fun getRecommendations(): StateFlow<List<FeedPost>> = recommendations
     override fun getComments(feedPost: FeedPost): StateFlow<List<PostComment>> = flow {
-        val comments = apiService.getComments(
+        Log.d(TAG, "getComments: getting comments...")
+        var comments = apiService.getComments(
             accessToken = getAccessToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id
         )
+        Log.d(TAG, "getComments: comments received $comments")
+
+        if (comments.content == null ) {
+            comments = mockCommentsResponse(
+                postId = feedPost.id
+            )
+        }
+        Log.d(TAG, "getComments: put mocks to comments $comments")
         emit(mapper.mapResponseToComments(comments))
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
@@ -176,6 +191,45 @@ class NewsFeedRepositoryImpl @Inject constructor(
         started = SharingStarted.Lazily,
         initialValue = listOf()
     )
+
+    fun mockCommentsResponse(postId: Long): CommentsResponseDto {
+        val profiles = listOf(
+            ProfileDto(
+                id = 1L,
+                firstName = "Иван",
+                lastName = "Иванов",
+                avatarUrl = "https://i.pravatar.cc/100?img=1"
+            ),
+            ProfileDto(
+                id = 2L,
+                firstName = "Мария",
+                lastName = "Петрова",
+                avatarUrl = "https://i.pravatar.cc/100?img=2"
+            ),
+            ProfileDto(
+                id = 3L,
+                firstName = "Алексей",
+                lastName = "Сидоров",
+                avatarUrl = "https://i.pravatar.cc/100?img=3"
+            )
+        )
+
+        val comments = (1..5).map { index ->
+            CommentDto(
+                id = index.toLong(),
+                authorId = profiles.random().id,
+                text = "Это моковый комментарий №$index к посту $postId",
+                date = System.currentTimeMillis() / 1000 - index * 60L // каждый минус одна минута
+            )
+        }
+
+        return CommentsResponseDto(
+            content = CommentsContentDto(
+                comments = comments,
+                profiles = profiles
+            )
+        )
+    }
 
     override suspend fun loadNextData() {
         nextDataNeededEvents.emit(Unit)

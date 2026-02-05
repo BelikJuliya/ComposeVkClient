@@ -45,8 +45,8 @@ class NewsFeedMapper @Inject constructor() {
 
     fun mapResponseToComments(response: CommentsResponseDto): List<PostComment> {
         val result = mutableListOf<PostComment>()
-        val comments = response.content.comments
-        val profiles = response.content.profiles
+        val comments = response.content?.comments ?: emptyList()
+        val profiles = response.content?.profiles ?: emptyList()
         for (comment in comments) {
             if (comment.text.isBlank()) continue
             val author = profiles.firstOrNull { it.id == comment.authorId } ?: continue
